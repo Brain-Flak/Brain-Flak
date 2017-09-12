@@ -24,6 +24,10 @@ class BrainFlakInterpreter < Interpreter
     @active_stack = @active_stack == @left ? @right : @left
   end
 
+  def slash_nilad()
+    @current_value += rand 2
+  end
+
   # Open Braces ~~~~~~~~~~~~~~~~
 
   def open_round()
@@ -51,6 +55,11 @@ class BrainFlakInterpreter < Interpreter
     @current_value = 0
   end
 
+  def open_slash()
+    @main_stack.push(['/', @current_value, @index])
+    @current_value = 0
+  end
+
   # Close Braces ~~~~~~~~~~~~~~~
 
   def close_round()
@@ -75,6 +84,12 @@ class BrainFlakInterpreter < Interpreter
   def close_angle()
     data = @main_stack.pop()
     @current_value = data[1]
+  end
+
+  def close_slash()
+    n = @main_stack.pop()[1]
+    @current_value = rand(0..abs(n))
+    end
   end
 
 end

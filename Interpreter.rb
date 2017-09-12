@@ -27,11 +27,11 @@ class Interpreter
     # Strip comments
     source = source.gsub(/(^[^#]*)#.*(\n|$)/, '\1')
     # Strips the source of any characters that aren't brackets or part of debug flags
-    @source = source.gsub(/(?<=^|[()\[\]<>{}]|\s)[^@()\[\]<>{}\s]*/, "")
+    @source = source.gsub(/(?<=^|[()\[\]<>{}\/\\]|\s)[^@()\[\]<>{}\/\\\s]*/, "")
     # Strips extra whitespace
     @source = @source.gsub(/\s/,"")
     # Strips extra @s
-    @source = @source.gsub(/@+(?=[()\[\]<>{}]|$)/, "")
+    @source = @source.gsub(/@+(?=[()\[\]<>{}\/\\]|$)/, "")
     @left = Stack.new('Left')
     @right = Stack.new('Right')
     @main_stack = []
@@ -59,7 +59,7 @@ class Interpreter
   end
 
   def remove_debug_flags(debug)
-    while match = /@[^@()\[\]{}<>\s]+/.match(@source) do
+    while match = /@[^@()\[\]{}<>\/\\\s]+/.match(@source) do
       str = @source.slice!(match.begin(0)..match.end(0)-1)
       slicer = /@[^'\d]*/.match(str)
       flag = str.slice(1..slicer.end(0)-1)
@@ -188,12 +188,13 @@ class Interpreter
       raise BrainFlakError.new("Maximum cycles exceeded", @index + 1)
     end
     current_symbol = @source[@index..@index+1] or @source[@index]
-    if ['()', '[]', '{}', '<>'].include? current_symbol
+    if ['()', '[]', '{}', '<>', '/\\'].include? current_symbol
       case current_symbol
         when '()' then round_nilad()
         when '[]' then square_nilad()
         when '{}' then curly_nilad()
         when '<>' then angle_nilad()
+        when '/\\' then slash_nilad()
       end
       @last_op = :nilad
       @index += 2
@@ -206,6 +207,7 @@ class Interpreter
           when '[' then open_square()
           when '<' then open_angle()
           when '{' then open_curly()
+          when '/' then open_slash()
         end
 
       elsif is_closing_bracket?(current_symbol) then
@@ -215,6 +217,7 @@ class Interpreter
           when ']' then close_square()
           when '>' then close_angle()
           when '}' then close_curly()
+          when '\\' then close_slash()
         end
       else raise BrainFlakError.new("Invalid character '%s'." % current_symbol, @index + 1)
       end
