@@ -6,6 +6,8 @@ require_relative './BraceCheck.rb'
 
 VERSION_STRING =  "Brain-Flak Ruby Interpreter v1.5.2"
 
+srand Random.new_seed
+
 require 'optparse'
 
 debug = false
@@ -173,7 +175,7 @@ begin
   when "classic"
     interpreter = ClassicInterpreter.new(source, numbers, [], debug, max_cycles)
   when "miniflak", "mini"
-    source = source.gsub(/#.*(\n|$)/,"").gsub(/[^\[\]{}()]/,"") # Parsing is done here so that we can strip `[]` properly
+    source = source.gsub(/#.*(\n|$)/,"").gsub(/[^\[\]{}()\/\\]/,"") # Parsing is done here so that we can strip `[]` properly
     while source =~ /\[\]/
       source = source.gsub("[]","")
     end
@@ -185,10 +187,10 @@ begin
   end
   while interpreter.step
   end
-  if interpreter.main_stack.length > 0
-    unmatched_brak = interpreter.main_stack[0]
-    raise BrainFlakError.new("Unmatched '%s' character." % unmatched_brak[0], unmatched_brak[2] + 1)
-  end
+#  if interpreter.main_stack.length > 0
+#    unmatched_brak = interpreter.main_stack[0]
+#    raise BrainFlakError.new("Unmatched '%s' character." % unmatched_brak[0], unmatched_brak[2] + 1)
+#  end
   if do_out then
     begin
       #Output current state

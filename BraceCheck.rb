@@ -1,7 +1,7 @@
 require_relative './BrainFlakError.rb'
 
 def braceCheck(source)
-  matches = ["()","[]","<>","{}"]
+  matches = ["()","[]","<>","{}","\/\\"]
   stack = []
   checking = true
   source.split("").each_with_index do |char, i|
@@ -13,9 +13,9 @@ def braceCheck(source)
 
     if not checking
       true #Do nothing
-    elsif "([<{".include? char
+    elsif "([<{\/".include? char
       stack.push([char, i])
-    elsif ")]>}".include? char
+    elsif ")]>}\\".include? char
       if stack.empty?
         raise BrainFlakError.new("Unopened '%s' character." %  char,i)
       elsif matches.include? stack[-1][0]+char

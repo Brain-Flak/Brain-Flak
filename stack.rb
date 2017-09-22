@@ -73,13 +73,13 @@ end
 
 def is_opening_bracket?(b)
   if b != nil then
-    return '([{<'.include? b
+    return '([{<\/'.include? b
   end
 end
 
 def is_closing_bracket?(b)
   if b != nil then
-    return ')]}>'.include? b
+    return ')]}>\\'.include? b
   end
 end
 
