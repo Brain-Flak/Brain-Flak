@@ -7,7 +7,7 @@ If you are not familiar with Brain-Flak, you should check that out [here](https:
 Rand-flak is a variation of Brain-Flak that adds one new nilad and one new monad so that it can compete in challenges requiring non-deterministic output. The two new atoms are:
 
  - `/\` Evaluates to 0 or 1 randomly, and
- - `/...\` Evaluates to a random number between 0 and `abs(...)`
+ - `/...\` Evaluates to a random number in the range `[0, abs(n)]`, where *n* is the value of the snippet inside.
 
 
 

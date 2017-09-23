@@ -211,7 +211,6 @@ class Interpreter
         end
 
       elsif is_closing_bracket?(current_symbol) then
-
         case current_symbol
           when ')' then close_round()
           when ']' then close_square()

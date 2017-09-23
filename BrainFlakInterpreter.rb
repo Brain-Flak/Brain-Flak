@@ -88,7 +88,8 @@ class BrainFlakInterpreter < Interpreter
 
   def close_slash()
     n = @main_stack.pop()[1]
-    @current_value = rand(0..abs(n))
+    @current_value = rand(0..@current_value.abs)
+    @current_value += n
   end
 
 end
